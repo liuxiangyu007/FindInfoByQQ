@@ -1,0 +1,186 @@
+﻿
+<!DOCTYPE html>  
+<html lang="en">  
+<head>  
+<meta charset="UTF-8">  
+<meta name="viewport" content="width=device-width, initial-scale=1.0">  
+<title>Q绑信息查询-小K网络</title>  
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>  
+<style>  
+    /* 基本样式 */  
+    body {  
+        font-family: Arial, sans-serif;  
+        margin: 0;  
+        padding: 20px;  
+        background-color: #f5f5f5;  
+    }  
+  
+    /* 标题样式 */  
+    h1 {  
+        text-align: center;  
+        color: #333;  
+    }  
+  
+    /* 表单样式 */  
+    #queryForm {  
+        max-width: 300px;  
+        margin: 0 auto;  
+        padding: 20px;  
+        background-color: #fff;  
+        border: 1px solid #ccc;  
+        border-radius: 5px;  
+    }  
+  
+    #queryForm label,  
+    #queryForm input[type="text"],  
+    #queryForm input[type="submit"] {  
+        display: block;  
+        width: 100%;  
+        margin-bottom: 10px;  
+    }  
+  
+    #queryForm input[type="text"] {  
+        padding: 5px;  
+        border: 1px solid #ccc;  
+        border-radius: 3px;  
+    }  
+  
+    #queryForm input[type="submit"] {  
+        background-color: #4CAF50;  
+        color: #fff;  
+        border: none;  
+        padding: 10px;  
+        cursor: pointer;  
+        border-radius: 3px;  
+    }  
+  
+    /* 结果样式 */  
+    #result {  
+        max-width: 300px;  
+        margin: 20px auto;  
+        padding: 20px;  
+        background-color: #fff;  
+        border: 1px solid #ccc;  
+        border-radius: 5px;  
+    }  
+  
+    #result div {  
+        margin-bottom: 10px;  
+    }  
+</style>  
+<style>  
+/* 底部版权链接样式 */  
+.footer-container {  
+    text-align: center; /* 文本居中 */  
+    padding: 20px 0; /* 上下内边距 */  
+    background-color: #f0f0f0; /* 背景色 */  
+    color: #666; /* 文本颜色 */  
+    font-size: 14px; /* 字体大小 */  
+}  
+  
+.footer-container a {  
+    color: #337ab7; /* 链接颜色 */  
+    text-decoration: none; /* 移除下划线 */  
+}  
+  
+.footer-container a:hover {  
+    color: #23527c; /* 链接悬停颜色 */  
+    text-decoration: underline; /* 悬停时添加下划线 */  
+}
+</style> 
+</head>  
+<body>  
+  
+<h1>Q绑信息查询</h1>  
+  
+<form id="queryForm">  
+    <label for="qq">QQ号码:</label>  
+    <input type="text" id="qq" name="qq" required>  
+    <input type="submit" value="查询">  
+</form>  
+  
+<div id="result"></div>  
+  
+<script>  
+// 绑定表单提交事件  
+$('#queryForm').on('submit', function(e) {  
+    e.preventDefault(); // 阻止表单默认提交行为  
+  
+    var qq = $('#qq').val(); // 获取QQ号码  
+    if (!qq) {  
+        alert('请输入QQ号码！');  
+        return;  
+    }  
+  
+    // 发起AJAX请求  
+    $.ajax({  
+        url: 'https://api.ziys.cn/qbapi.php', // API地址  
+        type: 'GET', // 请求类型  
+        data: { km: 'LA1717422803ZAQSP417AD', qq: qq }, // 请求参数  
+        dataType: 'text', // 先假设返回的是文本  
+        success: function(responseText) {  
+            // 尝试从响应文本中提取JSON数据  
+            var jsonStart = responseText.indexOf('{"status"');  
+            if (jsonStart !== -1) {  
+                // 提取JSON字符串  
+                var jsonString = responseText.substring(jsonStart);  
+                try {  
+                    // 解析JSON  
+                    var data = JSON.parse(jsonString);  
+                    // 检查是否查询成功  
+                    if (data.status === 200 && data.message === '查询成功') {  
+                        // 清空之前的结果  
+                        $('#result').empty();  
+                        // 创建并添加结果元素  
+                        $('#result').append('<div>QQ号码: ' + data.qq + '</div>');  
+                        $('#result').append('<div>手机号码: ' + data.phone + '</div>');  
+                        $('#result').append('<div>归属地: ' + data.phonediqu + '</div>');  
+                    } else {  
+                        alert('查询失败: ' + data.message);  
+                    }  
+                } catch (e) {  
+                    alert('解析JSON失败: ' + e.message);  
+                }  
+            } else {  
+                alert('无法找到JSON数据，请联系QQ460551');  
+            }  
+        },  
+        error: function(jqXHR, textStatus, errorThrown) {  
+            alert('请求失败: ' + textStatus + ', 错误: 接口地址失效或者卡密错误/卡密额度已用完，请联系QQ2301858400' + errorThrown);  
+        }  
+    });  
+});  
+</script>  
+  <!-- 底部版权链接 -->  
+<!-- 底部版权链接和图片广告位 -->  
+<footer>  
+    <div class="footer-container">  
+        <p>版权所有 &copy; 2024 小玉网络. 所有权利保留.</p>  
+        <p><a href="https://myweb-c3h5.onrender.com/">小玉网络</a></p> 
+        <!-- <p><a href="https://xkwo.com">在线封装双端app</a></p>   -->
+  
+        <!-- 图片广告位 -->  
+        <div class="ad-banner">  
+            <img src="static/images/1.gif" alt="广告图片">  
+        </div>  
+    </div>  
+</footer>  
+  
+<!-- 样式中添加广告位的样式 -->  
+<style>  
+    /* 广告位样式 */  
+    .ad-banner {  
+        text-align: center; /* 居中图片 */  
+        margin-top: 20px; /* 与上面的版权信息保持一定间距 */  
+    }  
+      
+    .ad-banner img {  
+        max-width: 100%; /* 图片宽度不超过容器宽度 */  
+        height: auto; /* 自动调整高度以保持图片比例 */  
+    }  
+</style>
+  
+</body>  
+</html>
+</body>  
+</html>
